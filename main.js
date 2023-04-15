@@ -1,23 +1,9 @@
-const submit = document.querySelector("button");
-console.log(submit);
-
-const ul = document.querySelector("ul");
-console.log(ul);
-
-const email = document.getElementById("exampleInputEmail1");
-console.log(email);
-
-const password = document.getElementById("exampleInputPassword1");
-console.log(password);
-
-submit.addEventListener("click", submitForm);
-
 window.addEventListener("DOMContentLoaded", initialFunction);
 function initialFunction(e) {
   axios
-    .get("https://crudcrud.com/api/b8a99b6f656b466bbf195711d897994a/addUser")
+    .get("https://crudcrud.com/api/5e08cf111c8d4a638a40c722206b7932/addUser")
     .then((res) => {
-      console.log(res.data);
+      console.log(res);
       let i = 0;
       for (let data of res.data) {
         const element = document.createElement("li");
@@ -42,7 +28,13 @@ function initialFunction(e) {
     .catch((err) => console.error(err));
 }
 
-console.log(ul);
+const submit = document.querySelector("button");
+
+const ul = document.querySelector("ul");
+
+const email = document.getElementById("exampleInputEmail1");
+
+const password = document.getElementById("exampleInputPassword1");
 
 function submitForm(e) {
   e.preventDefault();
@@ -68,59 +60,25 @@ function submitForm(e) {
     element.appendChild(editBtn);
 
     console.log(btn);
-    const obj = { email: `${email.value}`, password: `${password.value}` };
+    // const obj = { email: `${email.value}`, password: `${password.value}` };
 
-    console.log(obj);
+    // console.log(obj);
 
     //localStorage.setItem(`${email.value}Details`, JSON.stringify(obj));
 
     axios.post(
-      "https://crudcrud.com/api/b8a99b6f656b466bbf195711d897994a/addUser",
+      "https://crudcrud.com/api/5e08cf111c8d4a638a40c722206b7932/addUser",
       {
         email: `${email.value}`,
         password: `${password.value}`,
       }
     );
 
-    const details = JSON.parse(localStorage.getItem(`${email.value}Details`));
-    console.log(details.email);
-    console.log(details.password);
+    // const details = JSON.parse(localStorage.getItem(`${email.value}Details`));
+    // console.log(details.email);
+    // console.log(details.password);
 
-    console.log("Done");
-  }
-
-  ul.addEventListener("click", deleteItem);
-
-  function deleteItem(e) {
-    if (e.target.id == "delete") {
-      const parent = e.target.parentElement;
-      console.log(parent);
-
-      const deleteId = `${parent.firstElementChild.innerText}Details`;
-
-      ul.removeChild(parent);
-
-      //localStorage.removeItem(deleteId);
-    }
-  }
-
-  ul.addEventListener("click", editItem);
-  function editItem(e) {
-    if (e.target.id == "edit") {
-      const parent = e.target.parentElement;
-      console.log(parent);
-
-      const deleteId = `${parent.firstElementChild.innerText}Details`;
-
-      ul.removeChild(parent);
-
-      localStorage.removeItem(deleteId);
-
-      setTimeout((e) => {
-        email.value = `${parent.firstElementChild.innerText}`;
-        password.value = "";
-      }, 500);
-    }
+    // console.log("Done");
   }
 
   setTimeout((e) => {
@@ -128,3 +86,34 @@ function submitForm(e) {
     password.value = "";
   }, 200);
 }
+
+submit.addEventListener("click", submitForm);
+ul.addEventListener("click", (e) => {
+  if (e.target.id == "delete") {
+    const parent = e.target.parentElement;
+    uniqueEmail = parent.children[0].innerText;
+    axios
+      .get("https://crudcrud.com/api/5e08cf111c8d4a638a40c722206b7932/addUser")
+      .then((res) => {
+        console.log(res);
+        let i = 0;
+        for (let data of res.data) {
+          if (data.email == uniqueEmail) {
+            uniqueId = data._id;
+            axios
+              .delete(
+                `https://crudcrud.com/api/5e08cf111c8d4a638a40c722206b7932/addUser/${uniqueId}`
+              )
+              .then((res) => {
+                console.log("Deleted");
+              })
+              .catch((err) => console.error(err));
+          }
+        }
+      })
+      .catch((err) => console.error(err));
+    ul.removeChild(parent);
+  }
+});
+
+console.log(ul);
