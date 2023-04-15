@@ -12,6 +12,38 @@ console.log(password);
 
 submit.addEventListener("click", submitForm);
 
+window.addEventListener("DOMContentLoaded", initialFunction);
+function initialFunction(e) {
+  axios
+    .get("https://crudcrud.com/api/b8a99b6f656b466bbf195711d897994a/addUser")
+    .then((res) => {
+      console.log(res.data);
+      let i = 0;
+      for (let data of res.data) {
+        const element = document.createElement("li");
+        element.classList = "list-group-item text-center";
+        element.innerHTML = `<b>${data.email}</b>`;
+        i++;
+        ul.appendChild(element);
+
+        const btn = document.createElement("button");
+        btn.classList = "btn btn-danger float-right";
+        btn.innerText = "DELETE";
+        btn.id = "delete";
+        element.appendChild(btn);
+
+        const editBtn = document.createElement("button");
+        editBtn.classList = "btn btn-primary mr-5";
+        editBtn.innerText = "EDIT";
+        editBtn.id = "edit";
+        element.appendChild(editBtn);
+      }
+    })
+    .catch((err) => console.error(err));
+}
+
+console.log(ul);
+
 function submitForm(e) {
   e.preventDefault();
   console.log(email.value);
@@ -43,7 +75,7 @@ function submitForm(e) {
     //localStorage.setItem(`${email.value}Details`, JSON.stringify(obj));
 
     axios.post(
-      "https://crudcrud.com/api/5b085cf3d2f04d7982bed61206e7ddf5/addUser",
+      "https://crudcrud.com/api/b8a99b6f656b466bbf195711d897994a/addUser",
       {
         email: `${email.value}`,
         password: `${password.value}`,
