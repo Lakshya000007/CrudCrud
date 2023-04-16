@@ -1,7 +1,7 @@
 window.addEventListener("DOMContentLoaded", initialFunction);
 function initialFunction(e) {
   axios
-    .get("https://crudcrud.com/api/5e08cf111c8d4a638a40c722206b7932/addUser")
+    .get("https://crudcrud.com/api/1b0e06241ec744fd9a5d731b294a1245/addUser")
     .then((res) => {
       console.log(res);
       let i = 0;
@@ -67,7 +67,7 @@ function submitForm(e) {
     //localStorage.setItem(`${email.value}Details`, JSON.stringify(obj));
 
     axios.post(
-      "https://crudcrud.com/api/5e08cf111c8d4a638a40c722206b7932/addUser",
+      "https://crudcrud.com/api/1b0e06241ec744fd9a5d731b294a1245/addUser",
       {
         email: `${email.value}`,
         password: `${password.value}`,
@@ -88,12 +88,13 @@ function submitForm(e) {
 }
 
 submit.addEventListener("click", submitForm);
+
 ul.addEventListener("click", (e) => {
   if (e.target.id == "delete") {
     const parent = e.target.parentElement;
     uniqueEmail = parent.children[0].innerText;
     axios
-      .get("https://crudcrud.com/api/5e08cf111c8d4a638a40c722206b7932/addUser")
+      .get("https://crudcrud.com/api/1b0e06241ec744fd9a5d731b294a1245/addUser")
       .then((res) => {
         console.log(res);
         let i = 0;
@@ -102,10 +103,40 @@ ul.addEventListener("click", (e) => {
             uniqueId = data._id;
             axios
               .delete(
-                `https://crudcrud.com/api/5e08cf111c8d4a638a40c722206b7932/addUser/${uniqueId}`
+                `https://crudcrud.com/api/1b0e06241ec744fd9a5d731b294a1245/addUser/${uniqueId}`
               )
               .then((res) => {
                 console.log("Deleted");
+              })
+              .catch((err) => console.error(err));
+          }
+        }
+      })
+      .catch((err) => console.error(err));
+    ul.removeChild(parent);
+  }
+});
+
+ul.addEventListener("click", (e) => {
+  if (e.target.id == "edit") {
+    const parent = e.target.parentElement;
+    uniqueEmail = parent.children[0].innerText;
+    axios
+      .get("https://crudcrud.com/api/1b0e06241ec744fd9a5d731b294a1245/addUser")
+      .then((res) => {
+        console.log(res);
+        let i = 0;
+        for (let data of res.data) {
+          if (data.email == uniqueEmail) {
+            email.value = data.email;
+            password.value = data.password;
+            uniqueId = data._id;
+            axios
+              .delete(
+                `https://crudcrud.com/api/1b0e06241ec744fd9a5d731b294a1245/addUser/${uniqueId}`
+              )
+              .then((res) => {
+                console.log("Edited");
               })
               .catch((err) => console.error(err));
           }
